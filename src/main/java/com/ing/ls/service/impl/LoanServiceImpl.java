@@ -4,7 +4,7 @@ import com.ing.ls.dao.CustomerRepository;
 import com.ing.ls.dao.LoanRepository;
 import com.ing.ls.entity.Customer;
 import com.ing.ls.entity.Loan;
-import com.ing.ls.exception.CustomerException;
+import com.ing.ls.exception.CustomerNotFoundException;
 import com.ing.ls.service.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class LoanServiceImpl implements LoanService {
 
     public List<Loan> getLoanByCustomerId(Long customerId){
         Customer cust = customerRepository.findById(customerId)
-                .orElseThrow(() -> new CustomerException("Customer with CustomerId"+customerId + " not found!"));
+                .orElseThrow(() -> new CustomerNotFoundException("Customer with CustomerId"+customerId + " not found!"));
 
         return cust.getLoans();
     }

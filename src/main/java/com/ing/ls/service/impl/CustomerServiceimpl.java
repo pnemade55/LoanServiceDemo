@@ -4,10 +4,9 @@ import com.ing.ls.dao.CustomerRepository;
 import com.ing.ls.dto.LoanSummary;
 import com.ing.ls.entity.Customer;
 import com.ing.ls.entity.Loan;
-import com.ing.ls.exception.CustomerException;
+import com.ing.ls.exception.CustomerNotFoundException;
 import com.ing.ls.service.CustomerService;
 import io.micrometer.common.util.StringUtils;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,6 @@ public class CustomerServiceimpl implements CustomerService {
     private CustomerRepository customerRepository;
 
     @Override
-    @Transactional
     public Customer saveCustomer(Customer customer) {
         Customer custExisting = customerRepository.findByCustomerIdOrCustomerName(customer.getCustomerId(), customer.getCustomerName());
         Customer updatedCust;
@@ -30,7 +28,8 @@ public class CustomerServiceimpl implements CustomerService {
             if(validateCustomer(custExisting,customer)){
                 updatedCust= custExisting.addLoans(customer.getLoans());
             }else{
-                throw new CustomerException("Requested CustomerID and Customer Name missmatch found !");
+                throw new CustomerNotFoundException("Requested CustomerId : "+customer.getCustomerId() +
+                        "and Customer Name: "+ customer.getCustomerName() +"\n missmatch found !  Kindly Apply with Correct combination of CustomerId and Customer Name");
             }
            return customerRepository.save(updatedCust);
         }
@@ -52,7 +51,7 @@ public class CustomerServiceimpl implements CustomerService {
     public LoanSummary getLoanSummary(long customerId) {
 
         Customer customer = customerRepository.findById(customerId)
-                                            .orElseThrow(() -> new CustomerException("Requested CustomerID: " + customerId +" doesnt exist !"));
+                                            .orElseThrow(() -> new CustomerNotFoundException("Requested CustomerId: " + customerId +" doesnt exist !"));
 
         long totalLoanApplied = customer.getLoans()
                                 .stream()
