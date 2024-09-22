@@ -48,4 +48,5 @@ public class LoanServiceExceptionHandler extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    //Todo: add more exception if time permits
 }
