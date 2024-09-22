@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: loan-service-demo-k8s-service
+spec:
+  selector:
+    app: loan-service-demo-k8s
+  ports:
+    - protocol: "TCP"
+      port: 8081
+      targetPort: 8081
+  type: NodePort

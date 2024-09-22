@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loan-service-demo-k8s
+spec:
+  selector:
+    matchLabels:
+      app: loan-service-demo-k8s
+  replicas: 3 # Number of replicas that will be created for this deployment
+  template:
+    metadata:
+      labels:
+        app: loan-service-demo-k8s
+    spec:
+      containers:
+        - name: loan-service-demo-k8s
+          image: loan-service-demo-img:1.0 # Image Name
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
